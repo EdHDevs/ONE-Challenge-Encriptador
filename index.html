@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encriptador | Oracle+AluraLATAM</title>
+    <link rel="shortcut icon" href="./img/logo.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+<body>
+    <header>
+        <div class="contenedor">
+            <div class="header_img">
+                <img src="./img/logo.svg" alt="Logo de Alura">
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="contenedor">
+            <div class="encriptador">
+                <form class="encriptador_form">
+                    <div class="text_in">
+                        <textarea name="text_in_area" id="texto" placeholder="Ingrese el texto aqui" required></textarea>
+                        <div class="text_in_info">
+                            <div class="info">
+                                <img src="./img/exclamacion.svg" alt="">
+                                <p id="warning">Solo letras sin acentos</p>
+                            </div>
+                            <div class="text_in_btns">
+                                <input id="enc" type="button" value="Encriptar">
+                                <input id="des" type="button" value="Desencriptar">
+                            </div> 
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text_out_sec">
+                    <div class="out_content">
+                        <div class="content" id="default">
+                            <div class="text_out_img">
+                                <img src="./img/muneco.svg" alt="Imagen de animada">
+                            </div><p>Ningún mensaje fue encontrado</p>
+                            <p>Ingresa el texto que desees encriptar o desencriptar.</p>
+                        </div>
+                        <div class = "content invisible" id="result">
+                            <textarea name="text_out_area" id="texto_out" disabled></textarea>
+                            <button id="copiar">Copiar</button>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="pie-pagina">
+        <p>© 2024 Todos los derechos reservados por Edson Hervey | Oracle+AluraLatam. </p>
+        <!--Siguientes hipervinculos a paginas externas-->
+        <a href="https://linkedin.com/in/edson-hervey" target="_blank" rel="noopener noreferrer"><img src="./img/linkedin.png" class="pgn" alt="icono Linkedin"></a>
+        <a href="https://github.com/EdHDevs/" target="_blank" rel="noopener noreferrer"><img src="./img/github.png" class="pgn" alt="icono GitHub"></a>
+    </footer>
+</body>
+
+<script>
+    (() => {
+    const App = {
+        htmlElements: {
+            textarea: document.querySelector("#texto"),
+            areaDefault: document.querySelector("#default"),
+            areaResult: document.querySelector("#result"),
+            textoOut: document.querySelector("#texto_out"),
+            warning: document.querySelector("#warning"),
+            encButton: document.querySelector('#enc'),
+            desButton: document.querySelector('#des'),
+            copyButton: document.querySelector('#copiar')
+        },
+        traduccion: {
+            "a": "ai",
+            "e": "enter",
+            "i": "imes",
+            "o": "ober",
+            "u": "ufat",
+            "A":"AI",
+            "E":"ENTER",
+            "I":"IMES",
+            "O":"OBER",
+            "U":"UFAT",
+            " ": " "
+        },
+        init() {
+            this.bindEvents();
+        },
+        bindEvents() {
+            this.htmlElements.encButton.addEventListener('click', () => this.handlers.onEncriptButtonClick());
+            this.htmlElements.desButton.addEventListener('click', () => this.handlers.onDesencriptButtonClick());
+            this.htmlElements.copyButton.addEventListener('click', () => this.handlers.onClipboardButtonClick());
+        },
+        handlers: {
+            onEncriptButtonClick() {
+                App.methods.encriptar(App.traduccion);
+            },
+            onDesencriptButtonClick() {
+                App.methods.desencriptar(App.traduccion);
+            },
+            onClipboardButtonClick() {
+                App.methods.clipboard();
+            }
+        },
+        methods: {
+            encriptar(traduccion) {
+                App.htmlElements.warning.removeAttribute("style");
+                const texto = App.htmlElements.textarea.value;
+                let out = "";
+
+                if (texto !== "") {
+                    for (let i = 0; i < texto.length; i++) {
+                        if (((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] !== ' ')) {
+                            App.htmlElements.warning.style.color = "red";
+                            App.htmlElements.warning.style.fontSize = "16px";
+                            return;
+                        } else if ((texto.length === 1 && texto === " ") || texto.replace(/ /g, "") === "") {
+                            App.htmlElements.areaDefault.classList.remove("invisible");
+                            App.htmlElements.areaResult.classList.add("invisible");
+                            return;
+                        }
+                        out += traduccion[texto[i]] || texto[i];
+                    }
+
+                    App.htmlElements.areaDefault.classList.add("invisible");
+                    App.htmlElements.areaResult.classList.remove("invisible");
+                    App.htmlElements.textoOut.value = out;
+                }
+            },
+            desencriptar(traduccion) {
+                App.htmlElements.warning.removeAttribute("style");
+                let texto = App.htmlElements.textarea.value;
+
+                if (texto !== "") {
+                    for (let i = 0; i < texto.length; i++) {
+                        if (((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] !== ' ')) {
+                            App.htmlElements.warning.style.color = "red";
+                            App.htmlElements.warning.style.fontSize = "16px";
+                            return;
+                        } else if ((texto.length === 1 && texto === " ") || texto.replace(/ /g, "") === "") {
+                            App.htmlElements.areaDefault.classList.remove("invisible");
+                            App.htmlElements.areaResult.classList.add("invisible");
+                            return;
+                        }
+                    }
+
+                    App.htmlElements.areaDefault.classList.add("invisible");
+                    App.htmlElements.areaResult.classList.remove("invisible");
+                    Object.keys(traduccion).forEach(key => {
+                        const regex = new RegExp(traduccion[key], "g");
+                        texto = texto.replace(regex, key);
+                    });
+                    App.htmlElements.textoOut.value = texto;
+                }
+            },
+            clipboard() {
+                const textoOut = App.htmlElements.textoOut.value;
+                navigator.clipboard.writeText(textoOut);
+            }
+        }
+    };
+
+    App.init();
+})();
+
+</script>
+</html>
