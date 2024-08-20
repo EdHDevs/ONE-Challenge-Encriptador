@@ -117,7 +117,7 @@
 
                 if (texto !== "") {
                     for (let i = 0; i < texto.length; i++) {
-                        if (((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] !== ' ')) {
+                        if (((texto[i] < 'a') || (texto[i] > 'z') || (texto[i] < 'A') || (texto[i] > 'Z')) && (texto[i] !== ' ')) {
                             App.htmlElements.warning.style.color = "red";
                             App.htmlElements.warning.style.fontSize = "16px";
                             return;
